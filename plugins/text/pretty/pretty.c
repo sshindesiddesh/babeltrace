@@ -39,6 +39,13 @@
 
 #include "pretty.h"
 
+/* Array to store key of a filed in trace event record */
+extern char key[100][40];
+extern uint64_t key_cnt;
+/* Array to store value of a field in trace event record */
+extern uint64_t value[100];
+extern uint64_t val_cnt;
+
 GQuark stream_packet_context_quarks[STREAM_PACKET_CONTEXT_QUARKS_LEN];
 
 static
@@ -126,6 +133,17 @@ void pretty_finalize(struct bt_private_component *component)
 }
 
 static
+print_key_value() {
+	for (int i = 0; i < key_cnt; ++i) {
+		printf("{ key : %s , value : %u }\n", key[i], value[i]);
+	}
+	/* Reset counts */
+	key_cnt = 0;
+	val_cnt = 0;
+}
+
+
+static
 enum bt_component_status handle_notification(struct pretty_component *pretty,
 		struct bt_notification *notification)
 {
@@ -136,6 +154,7 @@ enum bt_component_status handle_notification(struct pretty_component *pretty,
 	switch (bt_notification_get_type(notification)) {
 	case BT_NOTIFICATION_TYPE_EVENT:
 		ret = pretty_print_event(pretty, notification);
+		print_key_value();
 		break;
 	case BT_NOTIFICATION_TYPE_INACTIVITY:
 		fprintf(stderr, "Inactivity notification\n");

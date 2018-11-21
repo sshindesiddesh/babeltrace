@@ -47,6 +47,14 @@
 #define COLOR_EVENT_NAME	BT_COMMON_COLOR_BOLD BT_COMMON_COLOR_FG_MAGENTA
 #define COLOR_TIMESTAMP		BT_COMMON_COLOR_BOLD BT_COMMON_COLOR_FG_YELLOW
 
+/* Array to store key of a filed in trace event record */
+char key[100][40];
+uint64_t key_cnt = 0;
+/* Array to store value of a field in trace event record */
+uint64_t value[100];
+uint64_t val_cnt = 0;
+
+
 struct timestamp {
 	int64_t real_timestamp;	/* Relative to UNIX epoch. */
 	uint64_t clock_value;	/* In cycles. */
@@ -626,6 +634,13 @@ enum bt_component_status print_integer(struct pretty_component *pretty,
 		rst_color = true;
 	}
 
+	/* Integer value here */
+	if (!signedness) {
+		value[val_cnt++] = (uint64_t)v.u;
+	} else {
+		value[val_cnt++] = (uint64_t)v.s;
+	}
+
 	base = bt_field_type_integer_get_base(field_type);
 	switch (base) {
 	case BT_INTEGER_BASE_BINARY:
@@ -931,6 +946,8 @@ enum bt_component_status print_struct_field(struct pretty_component *pretty,
 	}
 	if (print_names) {
 		print_field_name_equal(pretty, field_name);
+		/* Add field name here */
+		strcpy(key[key_cnt++], field_name);
 	}
 	ret = print_field(pretty, field, print_names, NULL, 0);
 	*nr_printed_fields += 1;
@@ -1289,6 +1306,8 @@ enum bt_component_status print_field(struct pretty_component *pretty,
 			g_string_append(pretty->string, COLOR_NUMBER_VALUE);
 		}
 		g_string_append_printf(pretty->string, "%g", v);
+		/* Float value here */
+		value[val_cnt++] = (uint64_t)v;
 		if (pretty->use_colors) {
 			g_string_append(pretty->string, COLOR_RST);
 		}
