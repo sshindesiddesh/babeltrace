@@ -290,6 +290,11 @@ enum bt_component_status print_event_timestamp(struct pretty_component *pretty,
 		struct bt_clock_value *clock_value =
 			bt_event_get_clock_value(event, clock_class);
 
+		/* Add timestamp to the key value store */
+		uint64_t timestamp = 0;
+		bt_clock_value_get_value(clock_value, &timestamp);
+		strcpy(key[key_cnt++], "Timestamp");
+		value[val_cnt++] = timestamp;
 		print_timestamp_wall(pretty, clock_value);
 		bt_put(clock_value);
 	}
@@ -563,6 +568,11 @@ enum bt_component_status print_event_header(struct pretty_component *pretty,
 		g_string_append(pretty->string, COLOR_EVENT_NAME);
 	}
 	g_string_append(pretty->string, bt_event_class_get_name(event_class));
+
+	/* Add syscall name entry/exit here */
+	strcpy(key[key_cnt++], (char *)bt_event_class_get_name(event_class));
+	value[val_cnt++] = 0;
+
 	if (pretty->use_colors) {
 		g_string_append(pretty->string, COLOR_RST);
 	}
