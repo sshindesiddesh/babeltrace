@@ -30,6 +30,8 @@
 #include <babeltrace/types.h>
 #include <stdlib.h>
 
+unsigned nsyscalls = 400;
+
 int bt_version_get_major(void)
 {
 	return BT_VERSION_MAJOR;

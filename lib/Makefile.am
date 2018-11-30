@@ -14,7 +14,8 @@ libbabeltrace_la_LIBADD = \
 	ctf-writer/libctf-writer.la \
 	$(top_builddir)/logging/libbabeltrace-logging.la \
 	$(top_builddir)/common/libbabeltrace-common.la \
-	$(top_builddir)/compat/libcompat.la
+	$(top_builddir)/compat/libcompat.la \
+	/root/lib/strace2ds/lib/libstrace2ds.la
 
 if ENABLE_BUILT_IN_PYTHON_PLUGIN_SUPPORT
 libbabeltrace_la_LIBADD += $(top_builddir)/python-plugin-provider/libbabeltrace-python-plugin-provider.la
